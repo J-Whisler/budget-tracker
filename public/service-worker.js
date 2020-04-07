@@ -6,7 +6,7 @@ const DATA_CACHE_NAME = 'data-cache-v1'
 //install
 
 self.addEventListener('install', e => {
-    e.waitUntill(
+    e.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
                 console.log('your files were pre-cached successfully')
@@ -16,3 +16,21 @@ self.addEventListener('install', e => {
     self.skipWaiting()
 })
 
+//activate
+self.addEventListener('activate', e => {
+    e.waitUntil(
+        caches.keys()
+            .then(keys => {
+                return Promise.all(
+                    keys.map(key => {
+                        if (key !== CACHE_NAME && key !== DATA_CACHE_NAME) {
+                            console.log('removing old cache data', key)
+                            return caches.delete(key)
+                        }
+                    })
+                )
+                self.ClientRectList.claim()
+                
+            })
+    )
+})
