@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
@@ -20,7 +21,7 @@ mongoose.connect("mongodb://localhost/budget", {
   useFindAndModify: false
 });
 
-// routes
+
 app.use(require("./routes/api.js"));
 
 app.listen(PORT, () => {
