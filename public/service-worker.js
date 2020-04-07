@@ -33,3 +33,38 @@ self.addEventListener('activate', e => {
     )
     self.ClientRectList.claim()
 })
+
+// fetch
+
+self.addEventListener('fetch', e => {
+    if (e.request.url.includes('/api')) {
+        e.respondWith(
+            caches.open(DATA_CACHE_NAME)
+                .then(cache => {
+                    return fetch(e.request)
+                        .then(res => {
+                            if (res.status === 200) {
+                                cache.put(e.request.url, res.clone())
+                            }
+                            return res
+                        })
+                        .catch(err => {
+                            return cache.match(e.request)
+                        })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        )
+        return
+    }
+    e.respondWith(
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                return cache.match(e.request)
+                    .then(res => {
+                        return res || fetch(e.request)
+                    })
+            })
+    )
+})
