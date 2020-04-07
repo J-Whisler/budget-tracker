@@ -29,8 +29,7 @@ self.addEventListener('activate', e => {
                         }
                     })
                 )
-                self.ClientRectList.claim()
-                
             })
     )
+    self.ClientRectList.claim()
 })
